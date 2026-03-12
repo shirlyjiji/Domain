@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Gavel, Clock, TrendingUp, History, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const AuctionBidding = ({ domain, onBidSuccess }) => {
     const [bidAmount, setBidAmount] = useState('');
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState({ type: '', text: '' });
 
     const minIncrement = 10;
     const currentPrice = domain?.price || 0;
@@ -14,12 +14,11 @@ const AuctionBidding = ({ domain, onBidSuccess }) => {
     const handleBid = async () => {
         const amount = parseFloat(bidAmount);
         if (isNaN(amount) || amount < minBid) {
-            setMessage({ type: 'error', text: `Minimum bid is $${minBid}` });
+            toast.error(`Minimum bid is $${minBid}`);
             return;
         }
 
         setLoading(true);
-        setMessage({ type: '', text: '' });
 
         try {
             // In a real app, user info would come from auth context
@@ -29,11 +28,11 @@ const AuctionBidding = ({ domain, onBidSuccess }) => {
                 user
             });
 
-            setMessage({ type: 'success', text: 'Bid placed successfully!' });
+            toast.success('Bid placed successfully!');
             setBidAmount('');
             if (onBidSuccess) onBidSuccess(res.data);
         } catch (err) {
-            setMessage({ type: 'error', text: err.response?.data?.message || 'Error placing bid' });
+            toast.error(err.response?.data?.message || 'Error placing bid');
         } finally {
             setLoading(false);
         }
@@ -75,11 +74,6 @@ const AuctionBidding = ({ domain, onBidSuccess }) => {
                                 {loading ? <Loader2 size={20} className="animate-spin" /> : 'BID NOW'}
                             </button>
                         </div>
-                        {message.text && (
-                            <p className={`small mt-2 ${message.type === 'error' ? 'text-danger' : 'text-success'}`}>
-                                {message.text}
-                            </p>
-                        )}
                         <p className="small text-muted mt-2">Minimum increment: ${minIncrement}.00</p>
                     </div>
                 </div>

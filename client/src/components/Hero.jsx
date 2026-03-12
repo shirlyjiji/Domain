@@ -14,14 +14,14 @@ const Hero = ({ onSearch }) => {
                         <h1 className="fw-bold display-4 mb-3">Buy & Sell Domains</h1>
                         <p className="lead mb-5 text-light-blue">Browse Domains at Fixed Prices, Auctions, or Make Offers.</p>
                         
-                        <div className="search-container bg-white p-1 rounded-3 shadow-lg d-flex">
+                        <div className="search-container bg-white p-1 rounded-pill shadow-lg d-flex align-items-center">
                             <input 
                                 type="text" 
-                                className="form-control border-0 py-3 px-4 shadow-none" 
+                                className="form-control border-0 py-3 px-4 shadow-none rounded-pill" 
                                 placeholder="Search domains..." 
                                 onChange={(e) => onSearch(e.target.value)}
                             />
-                            <button className="btn btn-warning-custom px-5 fw-bold text-dark">Search</button>
+                            <button className="btn btn-warning-custom px-5 py-3 fw-bold text-dark rounded-pill">Search</button>
                         </div>
                     </div>
                 </div>

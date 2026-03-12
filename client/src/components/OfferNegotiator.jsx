@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send, ThumbsUp, DollarSign, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const OfferNegotiator = ({ domain, messages = [], onOfferSuccess }) => {
     const [offerAmount, setOfferAmount] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
 
     const handleSendOffer = async () => {
         const amount = parseFloat(offerAmount);
         if (isNaN(amount) || amount <= 0) {
-            setError('Please enter a valid offer amount');
+            toast.error('Please enter a valid offer amount');
             return;
         }
 
         setLoading(true);
-        setError('');
 
         try {
             const payload = {
@@ -31,10 +30,11 @@ const OfferNegotiator = ({ domain, messages = [], onOfferSuccess }) => {
             };
 
             await axios.post('http://localhost:5000/api/messages', payload);
+            toast.success('Offer sent successfully!');
             setOfferAmount('');
             if (onOfferSuccess) onOfferSuccess();
         } catch (err) {
-            setError('Error sending offer. Please try again.');
+            toast.error('Error sending offer. Please try again.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -99,7 +99,6 @@ const OfferNegotiator = ({ domain, messages = [], onOfferSuccess }) => {
                                     {loading ? <Loader2 size={16} className="animate-spin" /> : <><Send size={16} /> Send Offer</>}
                                 </button>
                             </div>
-                            {error && <div className="text-danger small mt-1">{error}</div>}
                         </div>
                     </div>
                 </div>

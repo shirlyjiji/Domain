@@ -127,18 +127,18 @@ const ForumPage = () => {
                 <div className="row g-4">
                     <div className="col-lg-9">
                         {/* Listing Header */}
-                        <div className="listing-header mb-4 d-flex align-items-center gap-3 bg-white p-3 border shadow-sm">
+                        <div className="listing-header mb-4 d-flex align-items-center gap-3 bg-white p-3 border shadow-sm flex-wrap">
                             <span className={`badge px-3 py-2 rounded-0 fw-bold ${mainPost.category === 'Auctions' ? 'bg-primary' :
                                 mainPost.category === 'Make Offer' ? 'bg-info' : 'bg-warning text-dark'
                                 }`}>
                                 {mainPost.category?.toUpperCase() || 'FIXED'}
                             </span>
-                            <h3 className="fw-bold mb-0 text-dark-blue">{mainPost.domain}</h3>
-                            <div className="ms-auto d-flex gap-2">
-                                <button className="btn btn-outline-secondary btn-sm px-3 rounded-pill" onClick={fetchMessages}>
+                            <h3 className="fw-bold mb-0 text-dark-blue fs-4">{mainPost.domain}</h3>
+                            <div className="ms-md-auto d-flex gap-2 w-100 w-md-auto">
+                                <button className="btn btn-outline-secondary btn-sm px-3 rounded-pill flex-grow-1 flex-md-grow-0" onClick={fetchMessages}>
                                     <RefreshCcw size={14} className="me-1" /> Sync
                                 </button>
-                                <button className="btn btn-primary-custom btn-sm px-4 rounded-pill">Watch</button>
+                                <button className="btn btn-primary-custom btn-sm px-4 rounded-pill flex-grow-1 flex-md-grow-0">Watch</button>
                             </div>
                         </div>
 

@@ -5,7 +5,7 @@ const Domain = require('../models/Domain');
 // GET all domains with basic search/filter and pagination
 router.get('/', async (req, res) => {
     try {
-        const { search, category, minPrice, maxPrice, page = 1, limit = 8 } = req.query;
+        const { search, category, minPrice, maxPrice, page = 1, limit = 8, sort, extension, extensions } = req.query;
         let query = {};
 
         if (search) {
@@ -22,10 +22,28 @@ router.get('/', async (req, res) => {
             if (maxPrice) query.price.$lte = Number(maxPrice);
         }
 
+        // Filter by single extension dropdown selection
+        if (extension && extension !== 'Any Ext.') {
+            const ext = extension.toLowerCase().replace('.', '');
+            query.name = { ...query.name, $regex: new RegExp(`\\.${ext}$`, 'i') };
+        }
+
+        // Filter by multiple extensions from checkboxes
+        if (extensions) {
+            const extList = extensions.split(',').map(e => e.toLowerCase().replace('.', ''));
+            const extRegex = extList.map(e => new RegExp(`\\.${e}$`, 'i'));
+            query.name = { $in: extRegex };
+        }
+
+        // Sort logic
+        let sortQuery = { createdAt: -1 }; // default: latest
+        if (sort === 'price_asc') sortQuery = { price: 1 };
+        if (sort === 'price_desc') sortQuery = { price: -1 };
+
         const skip = (page - 1) * limit;
         const total = await Domain.countDocuments(query);
         const domains = await Domain.find(query)
-            .sort({ createdAt: -1 })
+            .sort(sortQuery)
             .skip(skip)
             .limit(Number(limit));
 
