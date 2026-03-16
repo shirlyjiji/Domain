@@ -1,0 +1,190 @@
+/* Forum Dashboard Styles - Marketplace UI Match */
+.forum-dashboard {
+    background: #F4F7F9;
+    min-height: 100vh;
+}
+
+.forum-banner {
+    background: linear-gradient(rgba(11, 74, 143, 0.8), rgba(11, 74, 143, 0.8)), url('../Assets/hero.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 0;
+    color: white;
+    text-align: center;
+}
+
+.forum-banner h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.forum-banner p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.search-container-forum {
+    max-width: 700px;
+    margin: 30px auto 0;
+}
+
+.forum-search-input {
+    border-radius: 5px 0 0 5px !important;
+    padding: 12px 20px;
+    border: none;
+}
+
+.forum-search-btn {
+    background: #f39c12 !important;
+    border: none !important;
+    border-radius: 0 5px 5px 0 !important;
+    padding: 0 30px;
+    font-weight: bold;
+    color: white;
+}
+
+.filter-bar-forum {
+    background: white;
+    padding: 10px 0;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 30px;
+}
+
+.btn-filter-forum {
+    background: #f39c12;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.btn-filter-forum-outline {
+    background: transparent;
+    color: #333;
+    border: none;
+    padding: 8px 20px;
+    font-weight: 600;
+    margin-right: 15px;
+}
+
+.sidebar-widget {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.widget-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 800;
+    color: #2C3E50;
+    font-size: 1.1rem;
+}
+
+.investor-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f8f8f8;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.investor-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.investor-info h6 {
+    margin: 0;
+    font-weight: 700;
+    color: #2C3E50;
+}
+
+.investor-info span {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.forum-table-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.forum-table thead {
+    background: #f8f9fa;
+}
+
+.forum-table th {
+    padding: 15px 20px;
+    font-weight: 700;
+    color: #777;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border: none;
+}
+
+.forum-table td {
+    padding: 20px;
+    vertical-align: middle;
+    border-color: #f0f0f0;
+}
+
+.topic-title {
+    color: #0056b3;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.topic-meta {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.btn-gold-forum {
+    background: #f39c12;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.btn-gold-forum:hover {
+    background: #e67e22;
+    color: white;
+}
+
+.popular-discussion-item {
+    padding: 12px 20px;
+    border-bottom: 1px solid #f8f8f8;
+    color: #0056b3;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: block;
+    text-decoration: none;
+}
+
+.popular-discussion-item:hover {
+    background: #f8f9fa;
+}
+
+.payment-widget {
+    background: linear-gradient(135deg, #2C3E50 0%, #3498DB 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 8px;
+    text-align: center;
+}
