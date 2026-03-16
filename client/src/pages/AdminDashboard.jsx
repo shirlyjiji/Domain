@@ -32,6 +32,13 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('overview');
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [showNotifications, setShowNotifications] = useState(false);
+
+    const notifications = [
+        { id: 1, title: 'New domain listed', time: '10 min ago', color: 'bg-primary' },
+        { id: 2, title: 'Sarah L. upgraded to Premium', time: '30 min ago', color: 'bg-info' },
+        { id: 3, title: 'Escrow payment received', time: '1h ago', color: 'bg-success' },
+    ];
 
     const fetchData = async (hideLoading = false) => {
         try {
@@ -155,9 +162,34 @@ const AdminDashboard = () => {
                                 <MessageSquare size={20} strokeWidth={1.5} />
                                 {stats.unreadMessages > 0 && <span className="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-warning text-white d-flex align-items-center justify-content-center" style={{ width: '14px', height: '14px', fontSize: '9px', padding: 0 }}>{stats.unreadMessages}</span>}
                             </div>
-                            <div className="position-relative cursor-pointer text-secondary hover-text-primary transition-all p-1">
+                            <div className="position-relative cursor-pointer text-secondary hover-text-primary transition-all p-1" onClick={() => setShowNotifications(!showNotifications)}>
                                 <Bell size={20} strokeWidth={1.5} />
                                 {stats.unreadNotifications > 0 && <span className="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style={{ width: '14px', height: '14px', fontSize: '9px', padding: 0 }}>{stats.unreadNotifications}</span>}
+                                
+                                {showNotifications && (
+                                    <div className="position-absolute top-100 end-0 mt-3 bg-white rounded-4 shadow-lg border-0 overflow-hidden" style={{ width: '280px', zIndex: 1050 }}>
+                                        <div className="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+                                            <span className="fw-bold small">Recent Notifications</span>
+                                            <span className="badge bg-danger rounded-pill" style={{ fontSize: '0.65rem' }}>{stats.unreadNotifications} New</span>
+                                        </div>
+                                        <div className="max-vh-50 overflow-auto">
+                                            {notifications.map(notif => (
+                                                <div key={notif.id} className="p-3 border-bottom hover-bg-light transition-all cursor-pointer">
+                                                    <div className="d-flex gap-3">
+                                                        <div className={`${notif.color} rounded-circle flex-shrink-0 mt-1`} style={{ width: '8px', height: '8px' }}></div>
+                                                        <div>
+                                                            <div className="fw-medium small text-dark-blue mb-1" style={{ fontSize: '0.8rem' }}>{notif.title}</div>
+                                                            <div className="text-muted" style={{ fontSize: '0.7rem' }}>{notif.time}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="p-2 text-center bg-light">
+                                            <button className="btn btn-link btn-sm text-decoration-none fw-bold small p-0" onClick={() => setShowNotifications(false)}>View All Alerts</button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div className="position-relative cursor-pointer text-secondary hover-text-primary transition-all p-1 d-none d-sm-block" onClick={() => setActiveTab('users')}>
                                 <User size={20} strokeWidth={1.5} />
@@ -175,16 +207,16 @@ const AdminDashboard = () => {
                     </div>
                 </header>
 
-                <div className="content-header d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row gap-3">
+                <div className="content-header d-flex justify-content-between align-items-md-center align-items-start mb-4 flex-column flex-md-row gap-3">
                     <div className="text-center text-md-start">
                         <h2 className="fw-bold mb-1 text-dark-blue fs-3 text-nowrap-md">Marketplace {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
                         <p className="text-muted mb-0 small">Manage and monitor your digital assets</p>
                     </div>
-                    <div className="d-flex gap-2 w-100 w-md-auto justify-content-center justify-content-md-end">
-                        <button className="btn btn-white shadow-sm rounded-pill px-3 d-flex align-items-center justify-content-center gap-2 flex-grow-1 flex-md-grow-0" onClick={fetchData} style={{ minWidth: 'fit-content' }}>
-                            <RefreshCcw size={16} /> <span className="d-none d-sm-inline">Sync</span><span className="d-sm-none">Sync</span>
+                    <div className="d-flex gap-2 w-100 w-md-auto justify-content-md-end flex-column flex-sm-row">
+                        <button className="btn btn-light shadow-sm rounded-pill px-3 d-flex align-items-center justify-content-center gap-2 flex-grow-1 flex-md-grow-0 w-100 w-sm-auto" onClick={fetchData} style={{ minHeight: '42px' }}>
+                            <RefreshCcw size={16} /> <span>Sync</span>
                         </button>
-                        <button className="btn btn-primary rounded-pill px-4 d-flex align-items-center justify-content-center gap-2 flex-grow-1 flex-md-grow-0" onClick={() => { setShowAddForm(true); setEditingDomain(null); }} style={{ minWidth: 'fit-content' }}>
+                        <button className="btn btn-primary rounded-pill px-4 d-flex align-items-center justify-content-center gap-2 flex-grow-1 flex-md-grow-0 w-100 w-sm-auto" onClick={() => { setActiveTab('listings'); setShowAddForm(true); setEditingDomain(null); }} style={{ minHeight: '42px' }}>
                             <Plus size={18} /> <span className="text-nowrap">New Listing</span>
                         </button>
                     </div>

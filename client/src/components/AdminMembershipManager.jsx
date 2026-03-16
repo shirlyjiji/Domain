@@ -18,41 +18,41 @@ const AdminMembershipManager = () => {
     return (
         <div className="admin-membership-manager">
             {/* Header with Stats */}
-            <div className="row g-4 mb-4">
-                <div className="col-xl-4 col-md-6">
-                    <div className="glass-card p-4 rounded-4 shadow-sm border-0 bg-primary-gradient text-white h-100">
-                        <div className="d-flex justify-content-between align-items-start mb-3">
+            <div className="row g-3 mb-4">
+                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                    <div className="glass-card p-3 p-md-4 rounded-4 shadow-sm border-0 bg-primary-gradient text-white h-100">
+                        <div className="d-flex justify-content-between align-items-start mb-2 mb-md-3">
                             <div className="bg-white-10 p-2 rounded-3 text-white flex-shrink-0">
-                                <UserCheck size={24} />
+                                <UserCheck size={20} />
                             </div>
-                            <span className="badge bg-white-10 text-white border-0 text-truncate">+12% this month</span>
+                            <span className="badge bg-white-10 text-white border-0 text-truncate" style={{ fontSize: '0.65rem' }}>+12%</span>
                         </div>
-                        <h4 className="fw-bold mb-1 text-white text-truncate">480</h4>
-                        <p className="opacity-75 small mb-0 fw-medium text-white text-truncate">Active Memberships</p>
+                        <h4 className="fw-bold mb-0 text-white text-truncate">480</h4>
+                        <p className="opacity-75 small mb-0 fw-medium text-white text-truncate" style={{ fontSize: '0.75rem' }}>Active Memberships</p>
                     </div>
                 </div>
-                <div className="col-xl-4 col-md-6">
-                    <div className="glass-card p-4 rounded-4 shadow-sm border-0 bg-white h-100">
-                        <div className="d-flex justify-content-between align-items-start mb-3">
+                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                    <div className="glass-card p-3 p-md-4 rounded-4 shadow-sm border-0 bg-white h-100">
+                        <div className="d-flex justify-content-between align-items-start mb-2 mb-md-3">
                             <div className="bg-success-soft text-success p-2 rounded-3 flex-shrink-0">
-                                <DollarSign size={24} />
+                                <DollarSign size={20} />
                             </div>
-                            <TrendingUp size={18} className="text-success flex-shrink-0" />
+                            <TrendingUp size={16} className="text-success flex-shrink-0" />
                         </div>
-                        <h4 className="fw-bold mb-1 text-dark-blue text-truncate">$12,450</h4>
-                        <p className="text-muted small mb-0 fw-medium text-truncate">Monthly MRR</p>
+                        <h4 className="fw-bold mb-0 text-dark-blue text-truncate">$12,450</h4>
+                        <p className="text-muted small mb-0 fw-medium text-truncate" style={{ fontSize: '0.75rem' }}>Monthly MRR</p>
                     </div>
                 </div>
-                <div className="col-xl-4 col-md-6">
-                    <div className="glass-card p-4 rounded-4 shadow-sm border-0 bg-white h-100">
-                        <div className="d-flex justify-content-between align-items-start mb-3">
+                <div className="col-xl-4 col-lg-6 col-md-6 col-sm-12">
+                    <div className="glass-card p-3 p-md-4 rounded-4 shadow-sm border-0 bg-white h-100">
+                        <div className="d-flex justify-content-between align-items-start mb-2 mb-md-3">
                             <div className="bg-warning-soft text-warning p-2 rounded-3 flex-shrink-0">
-                                <Calendar size={24} />
+                                <Calendar size={20} />
                             </div>
-                            <span className="badge bg-warning-soft text-warning border-0 text-truncate">Action Required</span>
+                            <span className="badge bg-warning-soft text-warning border-0 text-truncate" style={{ fontSize: '0.65rem' }}>Soon</span>
                         </div>
-                        <h4 className="fw-bold mb-1 text-dark-blue text-truncate">15</h4>
-                        <p className="text-muted small mb-0 fw-medium text-truncate">Expiring Soon</p>
+                        <h4 className="fw-bold mb-0 text-dark-blue text-truncate">15</h4>
+                        <p className="text-muted small mb-0 fw-medium text-truncate" style={{ fontSize: '0.75rem' }}>Expiring Soon</p>
                     </div>
                 </div>
             </div>

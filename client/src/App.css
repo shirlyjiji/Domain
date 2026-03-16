@@ -895,6 +895,27 @@ body {
   }
 
   /* Forum page */
+@media (max-width: 767.98px) {
+  .responsive-table-compact td, 
+  .responsive-table-compact th {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .responsive-table-compact .btn-sm {
+    padding: 4px 6px !important;
+  }
+  
+  .responsive-table-compact .ps-4 {
+    padding-left: 12px !important;
+  }
+  
+  .responsive-table-compact .pe-4 {
+    padding-right: 12px !important;
+  }
+}
+
   .forum-layout,
   .forum-content {
     flex-direction: column !important;

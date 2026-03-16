@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Megaphone, ExternalLink, Activity, DollarSign, MousePointerClick, Eye, Plus, Search, MoreHorizontal, ChevronRight, BarChart2 } from 'lucide-react';
 
 const AdminAdvertisementManager = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+
     // Mock data for advertisement stats and campaigns
     const adStats = {
         activeCampaigns: 12,
@@ -17,6 +19,11 @@ const AdminAdvertisementManager = () => {
         { id: 4, name: 'Tech Startup Package', advertiser: 'LaunchPad', status: 'Paused', impressions: '210,000', ctr: '5.1%', budget: '$1000/day', end: 'Jul 01, 2024', logo: 'https://i.pravatar.cc/150?u=launch' },
         { id: 5, name: 'AI Domain Names', advertiser: 'AITrends', status: 'Active', impressions: '95,000', ctr: '6.5%', budget: '$300/day', end: 'Nov 30, 2024', logo: 'https://i.pravatar.cc/150?u=ai' },
     ];
+
+    const filteredCampaigns = campaigns.filter(campaign => 
+        campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        campaign.advertiser.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const topPerforming = [
         { id: 1, name: 'AI Domain Names', roi: '+125%' },
@@ -97,7 +104,14 @@ const AdminAdvertisementManager = () => {
                             <div className="d-flex gap-2">
                                 <div className="position-relative">
                                     <Search size={16} className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
-                                    <input type="text" className="form-control form-control-sm rounded-pill ps-5 bg-light" placeholder="Search campaigns..." style={{ width: '240px' }} />
+                                    <input 
+                                        type="text" 
+                                        className="form-control form-control-sm rounded-pill ps-5 bg-light" 
+                                        placeholder="Search campaigns..." 
+                                        style={{ width: '240px' }} 
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
                                 </div>
                                 <button className="btn btn-outline-secondary btn-sm rounded-pill px-3 d-flex align-items-center gap-2 border">
                                     <ExternalLink size={14} /> Export Report
@@ -117,7 +131,7 @@ const AdminAdvertisementManager = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {campaigns.map(campaign => (
+                                    {filteredCampaigns.map(campaign => (
                                         <tr key={campaign.id}>
                                             <td className="ps-4">
                                                 <div className="d-flex align-items-center gap-3">

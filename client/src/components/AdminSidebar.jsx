@@ -46,12 +46,6 @@ const AdminSidebar = ({ activeTab, onTabChange, sidebarOpen }) => {
                     <ChevronDown size={14} className="ms-auto opacity-50" style={{ transform: 'rotate(-90deg)' }} />
                 </div>
 
-                <div className="d-flex align-items-center gap-4 px-3 mb-4">
-                    <LogOut size={18} className="text-white opacity-50 cursor-pointer hover-opacity-100" title="Sign Out" />
-                    <MessageSquare size={18} className="text-white opacity-50 cursor-pointer hover-opacity-100" title="Support" />
-                    <Globe size={18} className="text-white opacity-50 cursor-pointer hover-opacity-100" title="View Public Site" />
-                </div>
-
                 <div className="admin-profile-pill d-flex align-items-center gap-3 p-2 px-3 rounded-4 bg-white-10">
                     <img src="https://i.pravatar.cc/150?u=admin" alt="Admin" className="rounded-circle border border-2 border-white-20" style={{ width: '38px', height: '38px' }} />
                     <div className="overflow-hidden">

@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Gavel, TrendingUp, Users, DollarSign, Clock, Search, ExternalLink, MoreHorizontal, ArrowUpRight, Flame } from 'lucide-react';
 
 const AdminAuctionsManager = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [activeMenu, setActiveMenu] = useState(null);
+
+    // Close menu when clicking elsewhere
+    useEffect(() => {
+        const handleClickOutside = () => setActiveMenu(null);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
+    const handleAction = (e, action, domain) => {
+        e.stopPropagation();
+        alert(`${action} for ${domain}`);
+        setActiveMenu(null);
+    };
+
     // Mock data for auction stats and active auctions
     const auctionStats = {
         liveAuctions: 45,
@@ -12,11 +28,16 @@ const AdminAuctionsManager = () => {
 
     const activeAuctions = [
         { id: 1, domain: 'CryptoAI.com', startingBid: '$5,000', currentBid: '$12,500', bidders: 24, timeLeft: '02h 45m', status: 'Hot', icon: Flame },
-        { id: 2, name: 'EcoFoods.co', startingBid: '$500', currentBid: '$1,200', bidders: 8, timeLeft: '14h 20m', status: 'Live', icon: Clock },
-        { id: 3, name: 'CloudHost.net', startingBid: '$1,000', currentBid: '$3,450', bidders: 15, timeLeft: '1d 05h', status: 'Live', icon: Clock },
-        { id: 4, name: 'VRGames.io', startingBid: '$2,500', currentBid: '$8,900', bidders: 32, timeLeft: '45m 12s', status: 'Hot', icon: Flame },
-        { id: 5, name: 'SmartHome.org', startingBid: '$100', currentBid: '$450', bidders: 5, timeLeft: '3d 12h', status: 'Live', icon: Clock },
+        { id: 2, domain: 'EcoFoods.co', startingBid: '$500', currentBid: '$1,200', bidders: 8, timeLeft: '14h 20m', status: 'Live', icon: Clock },
+        { id: 3, domain: 'CloudHost.net', startingBid: '$1,000', currentBid: '$3,450', bidders: 15, timeLeft: '1d 05h', status: 'Live', icon: Clock },
+        { id: 4, domain: 'VRGames.io', startingBid: '$2,500', currentBid: '$8,900', bidders: 32, timeLeft: '45m 12s', status: 'Hot', icon: Flame },
+        { id: 5, domain: 'SmartHome.org', startingBid: '$100', currentBid: '$450', bidders: 5, timeLeft: '3d 12h', status: 'Live', icon: Clock },
     ];
+
+    const filteredAuctions = activeAuctions.filter(auction => {
+        const name = auction.domain || auction.name;
+        return name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
 
     const topBidders = [
         { id: 1, name: 'Alex M.', bids: 42, spent: '$25,000', avatar: 'https://i.pravatar.cc/150?u=alex' },
@@ -94,7 +115,14 @@ const AdminAuctionsManager = () => {
                             <div className="d-flex gap-2">
                                 <div className="position-relative">
                                     <Search size={16} className="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" />
-                                    <input type="text" className="form-control form-control-sm rounded-pill ps-5 bg-light" placeholder="Search domains..." style={{ width: '240px' }} />
+                                    <input 
+                                        type="text" 
+                                        className="form-control form-control-sm rounded-pill ps-5 bg-light" 
+                                        placeholder="Search domains..." 
+                                        style={{ width: '240px' }} 
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
                                 </div>
                                 <button className="btn btn-outline-secondary btn-sm rounded-pill px-3 d-flex align-items-center gap-2 border">
                                     <ExternalLink size={14} /> Export
@@ -115,10 +143,10 @@ const AdminAuctionsManager = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {activeAuctions.map(auction => (
-                                        <tr key={auction.id}>
+                                    {filteredAuctions.map(auction => (
+                                        <tr key={auction.id} className="cursor-pointer" onClick={() => alert(`Opening details for ${auction.domain}`)}>
                                             <td className="ps-4">
-                                                <div className="fw-bold text-dark-blue small mb-1">{auction.domain || auction.name}</div>
+                                                <div className="fw-bold text-dark-blue small mb-1">{auction.domain}</div>
                                             </td>
                                             <td>
                                                 <span className="text-muted small">{auction.startingBid}</span>
@@ -138,12 +166,37 @@ const AdminAuctionsManager = () => {
                                                 </div>
                                             </td>
                                             <td className="pe-4">
-                                                <div className="d-flex align-items-center justify-content-between">
+                                                <div className="d-flex align-items-center justify-content-between position-relative">
                                                     <span className={`badge rounded-pill fw-medium px-3 d-flex align-items-center gap-1 ${auction.status === 'Hot' ? 'bg-danger-soft text-danger' : 'bg-primary-soft text-primary'
                                                         }`}>
                                                         <auction.icon size={12} /> {auction.status}
                                                     </span>
-                                                    <button className="btn btn-link btn-sm text-muted p-0 hover-text-primary"><MoreHorizontal size={18} /></button>
+                                                    <div className="position-relative">
+                                                        <button 
+                                                            className="btn btn-link btn-sm text-muted p-0 hover-text-primary"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setActiveMenu(activeMenu === auction.id ? null : auction.id);
+                                                            }}
+                                                        >
+                                                            <MoreHorizontal size={18} />
+                                                        </button>
+                                                        
+                                                        {activeMenu === auction.id && (
+                                                            <div className="position-absolute end-0 mt-2 bg-white rounded-3 shadow-lg border py-2" style={{ zIndex: 100, width: '160px' }}>
+                                                                <button className="dropdown-item py-2 px-3 small d-flex align-items-center gap-2" onClick={(e) => handleAction(e, 'Viewing Bids', auction.domain)}>
+                                                                    <Users size={14} /> View Bids
+                                                                </button>
+                                                                <button className="dropdown-item py-2 px-3 small d-flex align-items-center gap-2" onClick={(e) => handleAction(e, 'Performance Check', auction.domain)}>
+                                                                    <TrendingUp size={14} /> Performance
+                                                                </button>
+                                                                <div className="dropdown-divider"></div>
+                                                                <button className="dropdown-item py-2 px-3 small text-danger d-flex align-items-center gap-2" onClick={(e) => handleAction(e, 'Ending Auction', auction.domain)}>
+                                                                    <Clock size={14} /> End Auction
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

@@ -318,11 +318,14 @@ const AdminMessageManager = ({ onMessagesRead, searchTerm = '' }) => {
                             <div className="chat-header px-4 py-3 border-bottom d-flex align-items-center justify-content-between bg-white">
                                 <div className="d-flex align-items-center gap-3">
                                     <button
-                                        className="btn btn-sm btn-light rounded-circle p-2 d-lg-none"
-                                        onClick={() => setMobileView('list')}
-                                        style={{ width: 36, height: 36 }}
+                                        className="btn btn-sm btn-light rounded-circle p-0 d-flex align-items-center justify-content-center d-lg-none"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setMobileView('list');
+                                        }}
+                                        style={{ width: 36, height: 36, cursor: 'pointer', zIndex: 10 }}
                                     >
-                                        <ArrowLeft size={16} />
+                                        <ArrowLeft size={18} />
                                     </button>
                                     <img src={`https://i.pravatar.cc/100?u=${activeThread}`} alt="User" className="rounded-circle" style={{ width: 40, height: 40, objectFit: 'cover' }} />
                                     <div>

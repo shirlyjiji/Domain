@@ -232,9 +232,11 @@ const AdminOverview = ({ stats, domains, searchTerm = '' }) => {
                                 <span className="text-muted small">Total Volume</span>
                                 <span className="fw-bold text-dark-blue fs-5">$4,200</span>
                             </div>
-                            <button className="btn btn-warning w-100 rounded-pill fw-bold py-2 shadow-sm d-flex align-items-center justify-content-center gap-2">
-                                View All <ChevronRight size={18} />
-                            </button>
+                            <div className="text-center">
+                                <button className="btn btn-warning rounded-pill fw-bold py-2 px-4 shadow-sm d-inline-flex align-items-center justify-content-center gap-2">
+                                    View All <ChevronRight size={18} />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
