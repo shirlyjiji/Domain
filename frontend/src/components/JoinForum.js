@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, InputGroup, Table, Modal, Badge, Spinner } from 'react-bootstrap';
 import { FaSearch, FaPlus, FaCheckCircle, FaUserCircle, FaBitcoin, FaLock, FaPaypal } from 'react-icons/fa';
 import axios from 'axios';
@@ -9,6 +10,7 @@ const JoinForum = () => {
     const [selectedCategory, setSelectedCategory] = useState('All Categories');
     const [threads, setThreads] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState('Domain Investing');
@@ -16,7 +18,7 @@ const JoinForum = () => {
 
     const fetchThreads = async () => {
         try {
-            const { data } = await axios.get('/api/forum/threads');
+            const { data } = await axios.get('http://localhost:5000/api/forum/threads');
             setThreads(data);
             setLoading(false);
         } catch (error) {
@@ -46,7 +48,12 @@ const JoinForum = () => {
                 },
             };
 
-            await axios.post('/api/forum/threads', { title, content: message, category }, config);
+            await axios.post('http://localhost:5000/api/forum/threads', { 
+                title, 
+                content: message, 
+                category,
+                username: userInfo.username // Pass the username to the backend
+            }, config);
             setShowModal(false);
             setTitle('');
             setMessage('');
@@ -63,16 +70,39 @@ const JoinForum = () => {
         { name: 'BrandExpert', rating: '93%', success: '93%', avatar: 'https://i.pravatar.cc/150?u=be' },
     ];
 
-    const filteredThreads = selectedCategory === 'All Categories' 
-        ? threads 
-        : threads.filter(t => t.category === selectedCategory);
+    const filteredThreads = threads.filter(t => {
+        const matchesCategory = selectedCategory === 'All Categories' || t.category === selectedCategory;
+        const matchesSearch = t.title.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
 
     return (
         <div className="forum-dashboard">
+            {/* Forum Banner */}
+            <div className="forum-banner">
+                <Container>
+                    <h1>Investor Discussions</h1>
+                    <p>Network and learn from experienced domain investors.</p>
+                    <div className="search-container-forum">
+                        <InputGroup>
+                            <Form.Control 
+                                placeholder="Search discussions..." 
+                                className="forum-search-input"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <Button className="forum-search-btn" onClick={() => {}}>
+                                <FaSearch className="me-2" /> Search
+                            </Button>
+                        </InputGroup>
+                    </div>
+                </Container>
+            </div>
+
             {/* Filter Bar */}
             <div className="filter-bar-forum">
-                <Container className="d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
+                <Container className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 py-3">
+                    <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2">
                         <button 
                             className={selectedCategory === 'All Categories' ? 'btn-filter-forum' : 'btn-filter-forum-outline'}
                             onClick={() => setSelectedCategory('All Categories')}
@@ -83,31 +113,31 @@ const JoinForum = () => {
                             className={selectedCategory === 'Domain Investing' ? 'btn-filter-forum' : 'btn-filter-forum-outline'}
                             onClick={() => setSelectedCategory('Domain Investing')}
                         >
-                            Domain Investing
+                            Investing
                         </button>
                         <button 
                             className={selectedCategory === 'Domain Selling Strategies' ? 'btn-filter-forum' : 'btn-filter-forum-outline'}
                             onClick={() => setSelectedCategory('Domain Selling Strategies')}
                         >
-                            Selling Strategies
+                            Strategies
                         </button>
                         <button 
                             className={selectedCategory === 'Domain Trends' ? 'btn-filter-forum' : 'btn-filter-forum-outline'}
                             onClick={() => setSelectedCategory('Domain Trends')}
                         >
-                            Domain Trends
+                            Trends
                         </button>
                     </div>
-                    <Button className="btn-gold-forum" onClick={() => setShowModal(true)}>
-                        <FaPlus className="me-2" /> Start New Discussion
+                    <Button className="btn-gold-forum w-40 w-md-auto" onClick={() => setShowModal(true)}>
+                        <FaPlus className="me-2" /> Start Discussion
                     </Button>
                 </Container>
             </div>
 
             <Container className="py-4">
-                <Row>
+                <Row className="g-4">
                     {/* Main Content: Thread Table */}
-                    <Col lg={8}>
+                    <Col lg={8} md={12}>
                         <div className="forum-table-card">
                             {loading ? (
                                 <div className="text-center p-5">
@@ -119,25 +149,29 @@ const JoinForum = () => {
                                     <thead>
                                         <tr>
                                             <th>Topic</th>
-                                            <th className="text-center">Replies</th>
-                                            <th className="text-center">Views</th>
-                                            <th>Last Post</th>
+                                            <th className="text-center d-none d-sm-table-cell">Replies</th>
+                                            <th className="text-center d-none d-md-table-cell">Views</th>
+                                            <th className="d-none d-sm-table-cell">Last Post</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {filteredThreads.map(thread => (
                                             <tr key={thread._id}>
-                                                <td style={{ width: '50%' }}>
-                                                    <a href="#" className="topic-title">{thread.title}</a>
+                                                <td style={{ minWidth: '200px' }}>
+                                                    <Link to={`/forum/thread/${thread._id}`} className="topic-title">{thread.title}</Link>
                                                     <div className="topic-meta">
                                                         By <strong>{thread.user ? thread.user.username : 'Anonymous'}</strong> in <span className="text-primary">{thread.category}</span>
+                                                        <div className="d-sm-none mt-1">
+                                                            <span className="me-2">{thread.replies || 0} replies</span>
+                                                            <span>{new Date(thread.createdAt).toLocaleDateString()}</span>
+                                                        </div>
                                                     </div>
                                                 </td>
-                                                <td className="text-center fw-bold">0</td>
-                                                <td className="text-center text-muted">0</td>
-                                                <td>
-                                                    <div className="fw-bold" style={{ fontSize: '0.9rem' }}>{new Date(thread.createdAt).toLocaleDateString()}</div>
-                                                    <div className="text-muted" style={{ fontSize: '0.8rem' }}>by {thread.user ? thread.user.username : 'Anonymous'}</div>
+                                                <td className="text-center fw-bold d-none d-sm-table-cell">{thread.replies || 0}</td>
+                                                <td className="text-center text-muted d-none d-md-table-cell">{thread.views || 0}</td>
+                                                <td className="d-none d-sm-table-cell">
+                                                    <div className="fw-bold" style={{ fontSize: '0.85rem' }}>{new Date(thread.createdAt).toLocaleDateString()}</div>
+                                                    <div className="text-muted" style={{ fontSize: '0.75rem' }}>by {thread.user ? thread.user.username : 'Anonymous'}</div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -153,16 +187,16 @@ const JoinForum = () => {
                     </Col>
 
                     {/* Sidebar Widgets */}
-                    <Col lg={4}>
+                    <Col lg={4} md={12}>
                         {/* Top Investors Widget */}
                         <div className="sidebar-widget">
-                            <div className="widget-header">Top Investors</div>
+                            <div className="widget-header">Top Domain Sellers</div>
                             {topInvestors.map((investor, idx) => (
                                 <div key={idx} className="investor-item">
                                     <img src={investor.avatar} alt={investor.name} className="investor-avatar" />
                                     <div className="investor-info flex-grow-1">
                                         <h6>{investor.name}</h6>
-                                        <span>Investor since 2022</span>
+                                        <span>Online for 4 years</span>
                                     </div>
                                     <div className="text-end">
                                         <div className="fw-bold text-success" style={{ fontSize: '0.9rem' }}>{investor.rating}</div>
@@ -170,29 +204,28 @@ const JoinForum = () => {
                                     </div>
                                 </div>
                             ))}
-                            <div className="p-3 text-center">
-                                <Button variant="link" className="text-decoration-none text-muted small p-0">View All Investors &gt;</Button>
+                            <div className="p-3 text-center border-top">
+                                <Button variant="link" className="text-decoration-none text-muted small p-0">View All &gt;</Button>
                             </div>
-                        </div>
-
-                        {/* Popular Discussions Widget */}
-                        <div className="sidebar-widget">
-                            <div className="widget-header">Popular Discussions</div>
-                            <a href="#" className="popular-discussion-item">.AI domain market demand</a>
-                            <a href="#" className="popular-discussion-item">Domain flipping tips for beginners</a>
-                            <a href="#" className="popular-discussion-item">Best marketplaces to sell fast</a>
-                            <a href="#" className="popular-discussion-item">How to appraise premium domains</a>
                         </div>
 
                         {/* Safe Payments Widget (Match marketplace UI) */}
-                        <div className="payment-widget">
+                        <div className="payment-widget-v2 mb-4">
                             <h5 className="fw-bold mb-3">Safe & Secure Payments</h5>
                             <div className="d-flex justify-content-center gap-3 mb-3">
-                                <FaPaypal size={24} />
-                                <FaBitcoin size={24} />
-                                <FaLock size={24} />
+                                <div className="payment-icon-bg"><FaPaypal size={20} /></div>
+                                <div className="payment-icon-bg"><FaBitcoin size={20} /></div>
+                                <div className="payment-icon-bg"><FaLock size={20} /></div>
                             </div>
                             <p className="small opacity-75 mb-0">We use escrow services to ensure secure transactions for all members.</p>
+                        </div>
+
+                        {/* Investor Discussions Widget */}
+                        <div className="investor-discussions-widget">
+                            <div className="widget-overlay">
+                                <h3>Forum: Investor Discussions</h3>
+                                <p>Join the Conversation</p>
+                            </div>
                         </div>
                     </Col>
                 </Row>

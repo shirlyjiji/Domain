@@ -9,6 +9,8 @@ const messageSchema = new mongoose.Schema({
     },
     content: { type: String, required: true },
     votes: { type: Number, default: 1 },
+    likes: { type: Number, default: 0 },
+    thanks: { type: Number, default: 0 },
     awards: [{ type: String }],
     isOffer: { type: Boolean, default: false },
     offerAmount: { type: Number },
