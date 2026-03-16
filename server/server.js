@@ -13,9 +13,13 @@ app.use(express.json());
 // Routes
 const domainRoutes = require('./routes/domainRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const userRoutes = require('./routes/userRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 app.use('/api/domains', domainRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
