@@ -33,6 +33,7 @@ const ForumPage = () => {
 
     const fetchMessages = async () => {
         try {
+            console.log(`Fetching messages for ${domainName}...`);
             const res = await axios.get(`http://localhost:5000/api/messages/${domainName}`);
             setMessages(res.data);
         } catch (err) {
@@ -42,8 +43,6 @@ const ForumPage = () => {
 
     const fetchDomain = async () => {
         try {
-            // We need a specific GET route for one domain or we can filter the list
-            // For now, let's assume we can fetch by name or use the list with a param
             const res = await axios.get(`http://localhost:5000/api/domains?search=${domainName}`);
             if (res.data.domains?.length > 0) {
                 setDomainState(res.data.domains[0]);
@@ -63,26 +62,34 @@ const ForumPage = () => {
         setLoading(true);
         try {
             const payload = {
-                domainName,
+                domainName: domainName || 'CanadaToAI.com',
                 sender: {
-                    name: 'GuestBuyer', // Future: get from auth
+                    name: 'GuestBuyer', 
                     avatar: 'https://i.pravatar.cc/150?u=guest',
                     role: 'Buyer'
                 },
                 content: newReply
             };
+            console.log('Posting reply payload:', payload);
             await axios.post('http://localhost:5000/api/messages', payload);
             setNewReply('');
-            fetchMessages();
+            // After posting, fetch updated message list
+            await fetchMessages();
+            // Scroll to the latest message
+            setTimeout(() => {
+                const thread = document.querySelector('.reddit-thread');
+                if (thread) thread.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 500);
         } catch (err) {
-            console.error('Error posting reply:', err);
+            console.error('Error posting reply from ForumPage:', err);
+            alert('Failed to post message. Check console for details.');
         } finally {
             setLoading(false);
         }
     };
 
     const handleVote = async (id, direction) => {
-        if (id === 'main') return; // Cannot vote on main post in this demo
+        if (id === 'main') return; 
         try {
             await axios.patch(`http://localhost:5000/api/messages/${id}/vote`, { direction });
             fetchMessages();

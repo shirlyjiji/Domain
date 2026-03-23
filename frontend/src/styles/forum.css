@@ -5,16 +5,16 @@
 }
 
 .forum-banner {
-    background: linear-gradient(rgba(11, 74, 143, 0.8), rgba(11, 74, 143, 0.8)), url('../Assets/hero.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../Assets/hero.jpg');
     background-size: cover;
     background-position: center;
-    padding: 60px 0;
+    padding: 80px 0;
     color: white;
     text-align: center;
 }
 
 .forum-banner h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 800;
     margin-bottom: 10px;
 }
@@ -181,10 +181,74 @@
     background: #f8f9fa;
 }
 
-.payment-widget {
-    background: linear-gradient(135deg, #2C3E50 0%, #3498DB 100%);
+.payment-widget-v2 {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
     color: white;
     padding: 25px;
     border-radius: 8px;
     text-align: center;
+}
+
+.payment-icon-bg {
+    background: rgba(255, 255, 255, 0.2);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.investor-discussions-widget {
+    background: url('../Assets/image7.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    height: 180px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.widget-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    width: 100%;
+    padding: 20px;
+    color: white;
+}
+
+.widget-overlay h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.widget-overlay p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    opacity: 0.9;
+}
+
+/* Targets the banner heading */
+.forum-banner h1 {
+    color: #ffffff !important;
+}
+.custom-breadcrumb .breadcrumb-item a {
+   color: #f8f9fa !important;
+    text-decoration: none !important; 
+}
+
+/* Targets the breadcrumb items and their separator slashes */
+.custom-breadcrumb .breadcrumb-item,
+.custom-breadcrumb .breadcrumb-item a,
+.custom-breadcrumb .breadcrumb-item::before {
+    color: #ffffff !important;
+    opacity: 1; /* Ensures text isn't faded */
+}
+
+/* Optional: Handle hover state so links don't turn blue/dark */
+.custom-breadcrumb .breadcrumb-item a:hover {
+    color: #f8f9fa !important;
+    text-decoration: none;
 }

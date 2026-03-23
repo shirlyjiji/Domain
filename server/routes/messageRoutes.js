@@ -1,18 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
+const ForumThread = require('../models/ForumThread');
 
-// GET all messages for a specific domain
-router.get('/:domainName', async (req, res) => {
-    try {
-        const messages = await Message.find({ domainName: req.params.domainName }).sort({ timestamp: 1 });
-        res.json(messages);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-// GET all unique domains with messages (for admin dashboard list)
+// GET all unique domains with messages
 router.get('/admin/threads', async (req, res) => {
     try {
         const threads = await Message.aggregate([
@@ -33,26 +24,51 @@ router.get('/admin/threads', async (req, res) => {
     }
 });
 
-// POST a new message (Buyer inquiry or Admin reply)
-router.post('/', async (req, res) => {
-    const { domainName, sender, content } = req.body;
-    const message = new Message({
-        domainName,
-        sender,
-        content
-    });
-
+// GET all messages for a specific domain
+router.get('/:domainName', async (req, res) => {
     try {
-        const newMessage = await message.save();
-        res.status(201).json(newMessage);
+        const messages = await Message.find({ domainName: req.params.domainName }).sort({ timestamp: 1 });
+        res.json(messages);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 
-// PATCH upvote/downvote a message
+// POST a new message (Buyer inquiry or Admin reply)
+router.post('/', async (req, res) => {
+    const { domainName, sender, content } = req.body;
+    
+    if (!domainName || !content) {
+        return res.status(400).json({ message: 'Domain name and content are required' });
+    }
+
+    try {
+        const message = new Message({
+            domainName,
+            sender,
+            content
+        });
+
+        const newMessage = await message.save();
+        
+        // Update reply count in ForumThread
+        // Upsert if necessary or just attempt update
+        await ForumThread.findOneAndUpdate(
+            { title: domainName },
+            { $inc: { replies: 1 } },
+            { new: true }
+        );
+
+        res.status(201).json(newMessage);
+    } catch (err) {
+        console.error('Error saving message:', err);
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH upvote/downvote
 router.patch('/:id/vote', async (req, res) => {
-    const { direction } = req.body; // 'up' or 'down'
+    const { direction } = req.body;
     const increment = direction === 'up' ? 1 : -1;
     try {
         const message = await Message.findByIdAndUpdate(req.params.id, { $inc: { votes: increment } }, { new: true });
@@ -62,25 +78,32 @@ router.patch('/:id/vote', async (req, res) => {
     }
 });
 
-// PATCH award a message
-router.patch('/:id/award', async (req, res) => {
-    const { awardType } = req.body;
+// PATCH like
+router.patch('/:id/like', async (req, res) => {
     try {
-        const message = await Message.findByIdAndUpdate(req.params.id, { $push: { awards: awardType } }, { new: true });
+        const message = await Message.findByIdAndUpdate(req.params.id, { $inc: { likes: 1 } }, { new: true });
         res.json(message);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-// PATCH mark all messages in a thread as read
-router.patch('/read/:domainName', async (req, res) => {
+// PATCH thank
+router.patch('/:id/thank', async (req, res) => {
     try {
-        await Message.updateMany(
-            { domainName: req.params.domainName, isRead: false },
-            { $set: { isRead: true } }
-        );
-        res.json({ message: 'Messages marked as read' });
+        const message = await Message.findByIdAndUpdate(req.params.id, { $inc: { thanks: 1 } }, { new: true });
+        res.json(message);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// PATCH award
+router.patch('/:id/award', async (req, res) => {
+    const { awardType } = req.body;
+    try {
+        const message = await Message.findByIdAndUpdate(req.params.id, { $push: { awards: awardType } }, { new: true });
+        res.json(message);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
